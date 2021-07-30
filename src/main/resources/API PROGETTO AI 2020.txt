@@ -1,0 +1,190 @@
+API REST PROGETTO AI 2020
+
+Registrazione:
+
+/************/
+
+UserDTO:
+     String username;
+     String email;
+     String password;
+     String role;
+
+/************/
+
+/register (POST new user in system)
+    ( Parametri della richiesta:
+            "userDTO" -> informazioni dell'utente )
+
+Login:
+
+/auth/sigin (POST per fare login)
+    ( Parametri della richiesta:
+                "username" -> String
+                "password" -> String
+      Ritorna il token per mantenere stato della connessione)
+
+Studente:
+
+/*************/
+
+StudentDTO:
+    - String id
+    - String firstName
+    - String name
+
+/*************/
+
+/API/students (GET all students)
+/API/students/{studentId} (GET a student)
+
+    // (ATTENZIONE: in teoria questa non viene mai chiamata, ma se ne occupa la registrazione) //
+/API/students (POST a new student) (nel momento in cui si fa la registrazione)
+
+/API/students/{id}/courses (GET all courses for student)
+
+/*************/
+
+TeamDTO:
+    - Long id
+    - String name
+    - Int status
+    - Int vcpuTot
+    - Int GBDiskTot
+    - Int GBRamTot
+    - Int vcpuUsati
+    - Int GBDiskUsati
+    - Int GBRamUsati
+
+/*************/
+
+/API/students/{id}/teams (GET all groups for student)
+
+/*************/
+
+TokenDTO:
+    String id;
+    Long teamId;
+    Timestamp expiryDate;
+
+/*************/
+
+/API/students/{id}/courses/{name}/requests (GET all requests to join a group for a course)
+
+
+
+Corso:
+
+/**************/
+
+CourseDTO:
+
+     String name;
+     int min;
+     int max;
+     boolean enabled;
+
+/*************/
+
+/API/courses/ (GET all courses)
+/API/courses/{name} (GET a course)
+
+/API/courses/ (POST create a new course)
+    ( Parametri della richiesta:
+        "courseDTO" -> dettagli del corso in formato descritto sopra
+        "docids" -> lista di String con id degli owner del corso )
+
+/API/courses/{name}/enrolled (GET all enrolled students in a course)
+/API/courses/{name}/enrollOne (POST enroll a student in a course)
+    ( Parametri della richiesta:
+                "studentDTO" -> dettagli dello studente )
+
+/API/courses/{name}/enrollMany (POST enroll many students through CSV file)
+    ( Parametri della richiesta:
+                    "file" -> MultipartFile in formato txt/csv contenente gli id degli studneti da iscrivere )
+
+
+/API/courses/{name}/teams (GET all teams for a course)
+/API/courses/{name} (DELETE a course)
+/API/courses/{name} (PUT update a course)
+    ( Parametri della richiesta:
+            "dto" -> dettagli del corso in formato descritto sopra
+            "docids" -> lista di String con id degli owner del corso )
+
+/API/courses//{name}/unsubscribeOne/{studentId} (PUT delete a student from enrolled students)
+    (No params)
+
+/API/courses/{name}/unsubscribeMany (PUT delete a list of student from enrolled students)
+    ( Parametri della richiesta:
+            "ids" -> lista di String con id degli studenti da eliminare )
+
+/***************/
+
+VmDTO:
+         Long id;
+         int vcpu;
+         int GBDisk;
+         int GBRam;
+         int status;
+
+/***************/
+
+/API/courses/{name}/teams/{teamId}/vMs (GET all vms for a course and a team)
+/API/courses/{name}/teams/{teamId} (PUT update limit for vms)
+    ( Parametri della richiesta:
+                "vcpus" -> int
+                "GBram" -> int
+                "GBdisk" -> int )
+
+/***************/
+
+TaskDTO:
+         Long id;
+         Timestamp dataRilascio;
+         Timestamp dataScadenza;
+         byte [] describe;
+
+/***************/
+
+/API/courses/{name}/tasks (GET all tasks for a course)
+/API/courses/{name}/tasks (POST create a new task)
+    ( Parametri della richiesta:
+                    "taskImg" -> MultipartFile immagine del file
+                    "days" -> int che indica la scadenza )
+
+/API/courses/{name}/tasks/{taskId}/essays (GET all elaborati for a task)
+/API/courses/{name}/tasks/{taskId}/essays/{essayId} (GET a specific elaborato)
+/API/courses/{name}/tasks/{taskId}/essays/{essayId} (PUT load new version of elaborato)
+    ( Parametri della richiesta:
+                        "data" -> MultipartFile immagine del file
+                        "voto" -> String che indica il voto OPZIONALE )
+
+/****************/
+
+ImageDTO:
+        String id;
+        String filename;
+        Timestamp creationDate;
+        byte[] data;
+
+/****************/
+
+/API/courses/{name}/tasks/{taskId}/essays/{essayId}/storical (GET restituisce lista di ImageDTO, lo storico delle consegne e correzioni)
+
+Gruppo:
+/API/students/{id}/teams/{teamid}/vms (GET all vms for a course and a student)
+/API/students/{id}/teams/{teamid}/vms (POST new VM for a course and a student)
+    ( Parametri della richiesta:
+                            "dto" -> VmDTO
+                            "screenvm" -> MultipartFile immagine della vm )
+/API/students/{id}/teams/{teamid}/vms/{vMId}/switch (POST with new status: accensione, spegnimento, cancellazione)
+    (no params)
+/API/students/{id}/teams/{teamid}/vms/{vMId} (DELETE cancella una vm e libera spazio dal gruppo)
+
+Docenti:
+/API/professors (GET all professors)
+
+ProfessorDTO:
+         private String id;
+         private String name;
+         private String firstName;
